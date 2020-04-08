@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Error</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{% block meta %}{% endblock %}
+	<link href="/css/error.css" rel="stylesheet">
+</head>
+<body>
+<main>
+	<h1>Exception: {{ exception.getMessage }}</h1>
+	<p>Code: {{ exception.getCode }}</p>
+	<p>{{ exception.getFile }} on line {{ exception.getLine }}</p>
+	{% for trace in exception.getTrace if trace.file is defined %}
+		<p>{{ trace.file }} on line {{ trace.line }}</p>
+	{% endfor %}
+</main>
+</body>
+</html>

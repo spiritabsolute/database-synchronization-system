@@ -1,0 +1,36 @@
+{% extends "layout/columns.html.twig" %}
+
+{% block title %}Psr framework - cabinet{% endblock %}
+
+{% block navbar %}
+	<a href="{{ generatePath("home") }}">Home</a>
+	<a href="{{ generatePath("blog") }}">Blog</a>
+	<a href="{{ generatePath("about") }}">About</a>
+	<a class="active" href="{{ generatePath("cabinet") }}">Cabinet</a>
+{% endblock %}
+
+{% block breadcrumb %}
+	<ul>
+		<li><a href="{{ generatePath("home") }}">Home</a></li>
+		<li>Cabinet</li>
+	</ul>
+{% endblock %}
+
+{% block main %}
+	<div class="content">
+		<h3>Cabinet of {{ username }}</h3>
+	</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="side">
+	<div>
+		<h3>Cabinet</h3>
+		<ul>
+			<li>Profile</li>
+			<li>Settings</li>
+			<li>Log out</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}

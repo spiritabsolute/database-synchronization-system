@@ -1,0 +1,13 @@
+version: "3.4"
+services:
+  app:
+    labels:
+      app.description: "Psr framework"
+      app.maintainer: "spiritabsolute@yandex.ru"
+    build:
+      context: .
+      target: prod
+    container_name: psr-framework-prod
+    command: composer serve
+    ports:
+      - 8000:8000

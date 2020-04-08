@@ -1,0 +1,14 @@
+{% extends "layout/default.html.twig" %}
+
+{% block title %}Psr framework - 500 (Server error){% endblock %}
+
+{% block navbar %}
+	<a class="active" href="{{ generatePath("home") }}">Home</a>
+	<a href="{{ generatePath("blog") }}">Blog</a>
+	<a href="{{ generatePath("about") }}">About</a>
+	<a href="{{ generatePath("cabinet") }}">Cabinet</a>
+{% endblock %}
+
+{% block content %}
+	<h3>500 - Server error</h3>
+{% endblock %}

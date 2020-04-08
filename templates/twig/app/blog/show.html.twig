@@ -1,0 +1,36 @@
+{% extends "layout/default.html.twig" %}
+
+{% block title %}Psr framework - {{ post.title }}{% endblock %}
+
+{% block meta %}
+	<meta name="description" content="{{ post.title }}">
+{% endblock %}
+
+{% block navbar %}
+	<a href="{{ generatePath("home") }}">Home</a>
+	<a class="active" href="{{ generatePath("blog") }}">Blog</a>
+	<a href="{{ generatePath("about") }}">About</a>
+	<a href="{{ generatePath("cabinet") }}">Cabinet</a>
+{% endblock %}
+
+{% block breadcrumb %}
+	<ul>
+		<li><a href="{{ generatePath("home") }}">Home</a></li>
+		<li><a href="{{ generatePath("blog") }}">Blog</a></li>
+		<li>{{ post.title }}</li>
+	</ul>
+{% endblock %}
+
+{% block content %}
+	<div class="content">
+		<h3>{{ post.title }}</h3>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{{ post.date|date("d.m.Y") }}
+			</div>
+			<div class="panel-body">
+				{{ post.content|nl2br }}
+			</div>
+		</div>
+	</div>
+{% endblock %}
