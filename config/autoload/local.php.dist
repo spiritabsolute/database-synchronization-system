@@ -2,11 +2,19 @@
 
 return [
 	"debug" => true,
-
 	"auth" => [
 		"users" => [
 			"admin" => "password"
 		]
 	]
-
+	'db1_config' => [
+		'dsn' => 'sqlite:../db/db1.sqlite',
+		'username' => '',
+		'password' => '',
+	],
+	'db2_config' => [
+		'dsn' => 'sqlite:../db/db2.sqlite',
+		'username' => '',
+		'password' => '',
+	],
 ];
