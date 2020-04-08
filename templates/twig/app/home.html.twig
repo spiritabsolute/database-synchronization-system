@@ -1,30 +1,27 @@
 {% extends "layout/default.html.twig" %}
 
-{% block title %}Psr framework - home{% endblock %}
+{% block title %}A synchronization system{% endblock %}
 
 {% block meta %}
-	<meta name="description" content="Home page description">
+	<meta name="description" content="A synchronization system between two heterogeneous databases">
 	<meta name="author" content="spiritabsolute">
 {% endblock %}
 
 {% block navbar %}
 	<a class="active" href="{{ generatePath("home") }}">Home</a>
-	<a href="{{ generatePath("blog") }}">Blog</a>
-	<a href="{{ generatePath("about") }}">About</a>
-	<a href="{{ generatePath("cabinet") }}">Cabinet</a>
 {% endblock %}
 
 {% block content %}
 	<div class="content">
-		<h3>What is Lorem Ipsum?</h3>
+		<h3>What is a synchronization system?</h3>
 		<p>
-			Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-			Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-			printer took a galley of type and scrambled it to make a type specimen book. It has survived
-			not only five centuries, but also the leap into electronic typesetting, remaining essentially
-			unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-			passages, and more recently with desktop publishing software like Aldus PageMaker including versions of
-			Lorem Ipsum.
+			The application has the following parameters:
+		</p>
+		<p>
+			1. The one have able to update database1 on request according to data from database2 (and in the opposite direction);
+		</p>
+		<p>
+			2. If necessary, creates new objects, updates existing ones, deletes existing objects;
 		</p>
 	</div>
 {% endblock %}

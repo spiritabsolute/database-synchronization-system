@@ -1,5 +1,5 @@
 .idea
-/log
+/logs
 /vendor
 /phpunit.xml
 docker-compose.override.yml
