@@ -1,3 +1,5 @@
+//todo use docker with full settings
+
 To run an application, use composer script:
  ```
  composer install
@@ -5,17 +7,13 @@ To run an application, use composer script:
  ```
 This will launch the php built-in web server.
 
-If you are using docker, run the command:
-```
-docker-compose -p psr-framework up --build
-```
-
 The application will be available at http://127.0.0.1:8000
 
+Commands for multiple migrations:
+```
+vendor/bin/phinx create -c db1.php Init
+vendor/bin/phinx create -c db2.php Init
 
-For **development mode** before build image you need add docker-compose.override.yml file.\
-Just copy the file docker-compose.override.yml.dist:
+vendor/bin/phinx migrate -c db1.php
+vendor/bin/phinx migrate -c db2.php
 ```
-docker-compose.override.yml.dist -> docker-compose.override.yml
-```
-To use **xdebug**, set the settings in the file: .docker/php/conf.d/xdebug.ini

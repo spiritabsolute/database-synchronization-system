@@ -8,12 +8,12 @@ return [
 		]
 	]
 	'db1_config' => [
-		'dsn' => 'sqlite:../db/db1.sqlite',
+		'dsn' => 'sqlite:../db/db1.sqlite3',
 		'username' => '',
 		'password' => '',
 	],
 	'db2_config' => [
-		'dsn' => 'sqlite:../db/db2.sqlite',
+		'dsn' => 'sqlite:../db/db2.sqlite3',
 		'username' => '',
 		'password' => '',
 	],
@@ -23,4 +23,7 @@ return [
 		'user' => 'guest',
 		'password' => 'guest',
 	],
+	'phinx' => [
+		'database' => 'db/db1'
+	]
 ];
