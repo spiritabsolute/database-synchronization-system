@@ -1,7 +1,7 @@
 <?php
 use Framework\Http\Application;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\Response\SapiEmitter;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\Response\SapiEmitter;
 
 /**
  * @var \Psr\Container\ContainerInterface $container

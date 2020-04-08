@@ -22,12 +22,12 @@ return [
 				{
 					return new WhoopsErrorResponseGenerator(
 						$container->get(Whoops\RunInterface::class),
-						new Zend\Diactoros\Response()
+						new Laminas\Diactoros\Response()
 					);
 				}
 				return new BaseErrorResponseGenerator(
 					$container->get(TemplateRenderer::class),
-					new Zend\Diactoros\Response(),
+					new Laminas\Diactoros\Response(),
 					["404" => "error/404", "error" => "error/error"]
 				);
 			},

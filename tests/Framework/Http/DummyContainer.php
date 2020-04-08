@@ -1,8 +1,8 @@
 <?php
 namespace Tests\Framework\Http;
 
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+use Laminas\ServiceManager\ServiceManager;
 
 class DummyContainer extends ServiceManager
 {

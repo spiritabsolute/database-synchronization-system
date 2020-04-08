@@ -1,7 +1,7 @@
 FROM composer AS composer
 
 COPY ./composer.json /app
-COPY ./composer.lock /app
+COPY composer.lock /app
 
 RUN composer install \
 	--no-interaction \
