@@ -24,6 +24,7 @@ return [
 		'password' => 'guest',
 	],
 	'phinx' => [
-		'database' => 'db/db1'
+		'db1' => 'db/db1',
+		'db2' => 'db/db2',
 	]
 ];

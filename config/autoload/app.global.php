@@ -1,6 +1,4 @@
 <?php
-use App\Http\Middleware;
-use Framework\Http\Application;
 use Framework\Http\Pipeline\Resolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
@@ -15,13 +13,6 @@ return [
 			ReflectionBasedAbstractFactory::class
 		],
 		"factories" => [
-			Application::class => function (ContainerInterface $container) {
-				return new Application(
-					$container->get(Resolver::class),
-					$container->get(Router::class),
-					$container->get(Middleware\PageNotFound::class)
-				);
-			},
 			Router::class => function () {
 				return new AuraRouterAdapter(new Aura\Router\RouterContainer());
 			},
