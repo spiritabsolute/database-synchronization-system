@@ -12,11 +12,7 @@ class SyncDataManager
 
 	public function addSyncQueue(SyncOutput $syncOutput)
 	{
-		return $this->storage->add([
-			'entity_id' => $syncOutput->getEntityId(),
-			'entity_type' => $syncOutput->getEntityType(),
-			'hash' => $syncOutput->getHash()
-		]);
+		return $this->storage->add($syncOutput->getFields());
 	}
 
 	public function generateHash(string $string)

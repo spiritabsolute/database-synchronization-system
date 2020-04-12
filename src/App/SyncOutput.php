@@ -1,18 +1,39 @@
 <?php
 namespace App;
 
-class SyncOutput
+class SyncOutput implements Entity
 {
-	private $id;
+	private $id = null;
+
 	private $entityId;
 	private $entityType;
 	private $hash;
 
-	public function __construct(int $entityId, int $entityType, string $hash)
+	public function __construct(int $entityId, string $entityType, string $hash)
 	{
 		$this->entityId = $entityId;
 		$this->entityType = $entityType;
 		$this->hash = $hash;
+	}
+
+	public function getType(): string
+	{
+		return self::class;
+	}
+
+	public function getFields(): array
+	{
+		return [
+			'id' => $this->id,
+			'entityId' => $this->entityId,
+			'entityType' => $this->entityType,
+			'hash' => $this->hash
+		];
+	}
+
+	public function getHashInput(): string
+	{
+		return '';
 	}
 
 	public function setId($id): void
@@ -23,20 +44,5 @@ class SyncOutput
 	public function getId(): int
 	{
 		return $this->id;
-	}
-
-	public function getEntityId(): int
-	{
-		return $this->entityId;
-	}
-
-	public function getEntityType(): int
-	{
-		return $this->entityType;
-	}
-
-	public function getHash(): string
-	{
-		return $this->hash;
 	}
 }

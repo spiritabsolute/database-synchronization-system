@@ -19,6 +19,7 @@
 		"psr/http-server-middleware": "^1.0",
 		"roave/security-advisories": "dev-master",
 		"robmorgan/phinx": "^0.11.6",
+		"symfony/console": "^5.0",
 		"twig/twig": "^2.6"
 	},
 	"autoload": {
@@ -32,9 +33,5 @@
 	"require-dev": {
 		"filp/whoops": "^2.3",
 		"phpunit/phpunit": "^8"
-	},
-	"scripts": {
-		"serve": "php -S 0.0.0.0:8000 -t public -f index.php",
-		"test": "phpunit --colors=always"
 	}
 }

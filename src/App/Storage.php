@@ -4,19 +4,21 @@ namespace App;
 class Storage
 {
 	private $pdo;
-	private $entity;
+	private $tableName;
 
-	public function __construct(\PDO $pdo, string $entity)
+	public function __construct(\PDO $pdo, string $tableName)
 	{
 		$this->pdo = $pdo;
-		$this->entity = $entity;
+		$this->tableName = $tableName;
 	}
 
 	public function add(array $fields): int
 	{
 		$values = $this->prepareValues($fields);
 
-		$statement = $this->pdo->prepare('INSERT INTO '.$this->pdo->quote($this->entity).' VALUES ('.$values.')');
+		$statement = $this->pdo->prepare('
+			INSERT INTO '.$this->pdo->quote($this->tableName).' VALUES ('.$values.')
+		');
 
 		$this->bindValues($statement, $fields);
 
@@ -27,7 +29,9 @@ class Storage
 
 	public function get(int $id): array
 	{
-		$statement = $this->pdo->prepare('SELECT * FROM '.$this->pdo->quote($this->entity).' WHERE id = :id');
+		$statement = $this->pdo->prepare('
+			SELECT * FROM '.$this->pdo->quote($this->tableName).' WHERE id = :id
+		');
 
 		$statement->bindValue(':id', $id, \PDO::PARAM_INT);
 
@@ -47,7 +51,7 @@ class Storage
 	{
 		$statement = $this->pdo->prepare('
 			SELECT * 
-			FROM '.$this->pdo->quote($this->entity).' 
+			FROM '.$this->pdo->quote($this->tableName).' 
 			ORDER_BY id DESC 
 			LIMIT :limit 
 			OFFSET :offset
@@ -66,7 +70,7 @@ class Storage
 		$values = $this->prepareUpdateValues($fields);
 
 		$statement = $this->pdo->prepare('
-			UPDATE '.$this->pdo->quote($this->entity).' 
+			UPDATE '.$this->pdo->quote($this->tableName).' 
 			SET '.$values.'
 			WHERE id = :id
 		');
@@ -81,7 +85,7 @@ class Storage
 	public function delete(int $id): bool
 	{
 		$statement = $this->pdo->prepare('
-			DELETE FROM '.$this->pdo->quote($this->entity).' 
+			DELETE FROM '.$this->pdo->quote($this->tableName).' 
 			WHERE id = :id
 		');
 
@@ -94,7 +98,7 @@ class Storage
 
 	public function countAll(): int
 	{
-		return $this->pdo->query('SELECT COUNT(id) FROM '.$this->pdo->quote($this->entity))->fetchColumn();
+		return $this->pdo->query('SELECT COUNT(id) FROM '.$this->pdo->quote($this->tableName))->fetchColumn();
 	}
 
 	public function beginTransaction(): void
