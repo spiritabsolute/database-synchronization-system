@@ -20,19 +20,15 @@
 		"roave/security-advisories": "dev-master",
 		"robmorgan/phinx": "^0.11.6",
 		"symfony/console": "^5.0",
-		"symfony/process": "^5.0",
-		"twig/twig": "^2.6"
+		"symfony/process": "^5.0"
 	},
 	"autoload": {
 		"psr-4": {
-			"Framework\\": "src/Framework/",
 			"App\\": "src/App/",
-			"Infrastructure\\": "src/Infrastructure/",
-			"Tests\\": "tests/"
+			"Infrastructure\\": "src/Infrastructure/"
 		}
 	},
 	"require-dev": {
-		"filp/whoops": "^2.3",
-		"phpunit/phpunit": "^8"
+		"filp/whoops": "^2.3"
 	}
 }
