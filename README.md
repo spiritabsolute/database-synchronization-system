@@ -19,9 +19,11 @@ This is a console application. To work with the application, input the command:
 bin/app.php
 
 Available commands:
-  help                 Displays help for a command
-  list                 Lists commands
- app
   app:create-employee  Creates a new employee
+  app:migrate          Perform migrations that create a database structure
+```
 
+First you need to perform migrations that create a database structure:
+```
+bin/app.php app:migrate
 ```

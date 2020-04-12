@@ -20,6 +20,7 @@
 		"roave/security-advisories": "dev-master",
 		"robmorgan/phinx": "^0.11.6",
 		"symfony/console": "^5.0",
+		"symfony/process": "^5.0",
 		"twig/twig": "^2.6"
 	},
 	"autoload": {

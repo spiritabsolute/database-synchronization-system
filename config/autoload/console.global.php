@@ -1,13 +1,17 @@
 <?php
 
-use App\Console\Command\EmployeeCreateCommand;
+use App\Console\Command\EmployeeCreate;
+use App\Console\Command\Migration;
 use Psr\Container\ContainerInterface;
 
 return [
 	'dependencies' => [
 		'factories' => [
-			EmployeeCreateCommand::class => function (ContainerInterface $container) {
-				return new EmployeeCreateCommand($container);
+			EmployeeCreate::class => function (ContainerInterface $container) {
+				return new EmployeeCreate($container);
+			},
+			Migration::class => function (ContainerInterface $container) {
+				return new Migration($container);
 			},
 		],
 	],
@@ -17,7 +21,8 @@ return [
 			'db2' => 'db2'
 		],
 		'commands' => [
-			EmployeeCreateCommand::class,
+			Migration::class,
+			EmployeeCreate::class,
 		],
 	],
 ];
