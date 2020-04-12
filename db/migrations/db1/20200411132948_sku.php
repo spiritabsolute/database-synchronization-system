@@ -14,21 +14,5 @@ class Sku extends AbstractMigration
 		$table->addColumn('stock', 'integer');
 
 		$table->create();
-
-		$rows = [
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'sku_1',
-				'stock' => 245,
-			],
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'sku_2',
-				'stock' => 246,
-			],
-		];
-		$table->insert($rows)->save();
 	}
 }

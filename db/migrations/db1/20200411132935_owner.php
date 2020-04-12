@@ -13,19 +13,5 @@ class Owner extends AbstractMigration
 		$table->addColumn('name', 'text');
 
 		$table->create();
-
-		$rows = [
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'owner_1',
-			],
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'owner_2',
-			],
-		];
-		$table->insert($rows)->save();
 	}
 }

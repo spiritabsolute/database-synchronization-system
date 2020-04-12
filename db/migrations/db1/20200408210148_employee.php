@@ -13,19 +13,5 @@ class Employee extends AbstractMigration
 		$table->addColumn('name', 'text');
 
 		$table->create();
-
-		$rows = [
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'employee_1'
-			],
-			[
-				'createdAt' => time(),
-				'modifiedAt' => time(),
-				'name' => 'employee_2'
-			],
-		];
-		$table->insert($rows)->save();
 	}
 }

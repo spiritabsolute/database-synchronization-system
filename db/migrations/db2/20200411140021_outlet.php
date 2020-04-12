@@ -11,7 +11,6 @@ class Outlet extends AbstractMigration
 		$table->addColumn('createdAt', 'integer');
 		$table->addColumn('modifiedAt', 'integer');
 		$table->addColumn('name', 'text');
-
 		$table->addColumn('owner_name', 'text');
 
 		$table->create();
