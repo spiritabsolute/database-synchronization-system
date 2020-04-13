@@ -1,5 +1,5 @@
 <?php
-namespace App\Db1;
+namespace App\Entity;
 
 use App\EntityManager;
 use App\Storage;

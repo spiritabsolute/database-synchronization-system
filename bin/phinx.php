@@ -1,9 +1,10 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+chdir(dirname(__DIR__));
+require 'vendor/autoload.php';
 
 /** @var \Psr\Container\ContainerInterface $container */
-$container = require __DIR__.'/config/container.php';
+$container = require 'config/container.php';
 
 return [
 	'environments' => [
@@ -11,12 +12,12 @@ return [
 		'default_database' => 'app',
 		'app' => [
 			'adapter' => 'sqlite',
-			'name' => $container->get('config')['phinx'][$dbName],
-			'connection' => $container->get($dbName),
+			'name' => $container->get('config')['phinx']['db'],
+			'connection' => $container->get(PDO::class),
 		],
 	],
 	'paths' => [
-		'migrations' => 'db/migrations/'.$dbName,
+		'migrations' => 'db/migrations/',
 		'seeds' => 'db/seeds'
 	]
 ];

@@ -24,7 +24,7 @@ class SyncManager
 		$this->syncDataManager = $syncDataManager;
 	}
 
-	public function send()
+	public function produce()
 	{
 		$exchange = 'exchange';
 
@@ -41,7 +41,7 @@ class SyncManager
 		$this->connection->close();
 	}
 
-	public function receive()
+	public function consume()
 	{
 		$exchange = 'exchange';
 		$queue = 'base';

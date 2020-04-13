@@ -1,21 +1,25 @@
 <?php
-namespace App\Console\Command;
+namespace App\Command;
 
 use App\EntityManager;
-use App\Storage;
 use App\SyncDataManager;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-class EmployeeCreate extends Base
+class EmployeeCreate extends Command
 {
+	private $container;
+
 	public function __construct(ContainerInterface $container, string $name = null)
 	{
-		parent::__construct($container, $name);
+		parent::__construct($name);
+
+		$this->container = $container;
 	}
 
 	protected function configure()

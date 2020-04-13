@@ -1,17 +1,22 @@
 <?php
-namespace App\Console\Command;
+namespace App\Command;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class Migration extends Base
+class Migration extends Command
 {
+	private $container;
+
 	public function __construct(ContainerInterface $container, string $name = null)
 	{
-		parent::__construct($container, $name);
+		parent::__construct($name);
+
+		$this->container = $container;
 	}
 
 	protected function configure()
@@ -26,13 +31,11 @@ class Migration extends Base
 	{
 		$output->writeln('<comment>Migrating database</comment>');
 
-		$db = $this->getDb($input, $output);
-
 		$process = new Process([
 			'vendor/bin/phinx',
 			'migrate',
 			'-c',
-			$db.'.php'
+			'bin/phinx.php'
 		]);
 
 		$process->run();

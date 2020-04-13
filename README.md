@@ -3,12 +3,24 @@ git clone git@github.com:spiritabsolute/database-synchronization-system.git Data
 cd DatabaseSynchronizationSystem
 ```
 
-//todo use docker with full settings
-```
+This is a console application. For installation, you will need a docker and docker-compose.
 
+Hit up the following command to start fetching all the dependencies:
 ```
+docker-compose up -d
+``` 
 
-This is a console application. To work with the application, see the list of available commands:
+Once everything is finish downloading, you can execute PHP command line application.  
+In this state, you have a container with a rabbitmq and two containers with applications between 
+which synchronization will occur.
+
+Hit up the following command to start working with the application on which db1 is located.
+```
+docker-compose exec db1 bash
+```
+This will open a new terminal inside the container. 
+
+To work with the application, see the list of available commands:
 ```
 bin/app.php
 ```

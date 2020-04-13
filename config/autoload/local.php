@@ -6,14 +6,9 @@ return [
 		"users" => [
 			"admin" => "password"
 		]
-	]
-	'db1_config' => [
-		'dsn' => 'sqlite:db/db1.sqlite3',
-		'username' => '',
-		'password' => '',
 	],
-	'db2_config' => [
-		'dsn' => 'sqlite:db/db2.sqlite3',
+	'db' => [
+		'dsn' => 'sqlite:db/db.sqlite3',
 		'username' => '',
 		'password' => '',
 	],
@@ -24,7 +19,6 @@ return [
 		'password' => 'guest',
 	],
 	'phinx' => [
-		'db1' => 'db/db1',
-		'db2' => 'db/db2',
+		'db' => 'db/db',
 	]
 ];

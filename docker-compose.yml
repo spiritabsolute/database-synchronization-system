@@ -1,0 +1,45 @@
+version: '2'
+
+networks:
+  app:
+    driver: bridge
+
+services:
+  composer:
+    restart: 'no'
+    build:
+      context: ./
+    container_name: 'composer'
+    volumes:
+      - .:/app
+    networks:
+      - app
+  db1:
+    build:
+      context: ./docker
+    container_name: 'db1'
+    depends_on:
+      - composer
+    volumes:
+      - .:/app
+    networks:
+      - app
+  db2:
+    build:
+      context: ./docker
+    container_name: 'db2'
+    depends_on:
+      - composer
+    volumes:
+      - .:/app
+    networks:
+      - app
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    hostname: 'rabbit'
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    container_name: 'rabbitmq'
+    networks:
+      - app
