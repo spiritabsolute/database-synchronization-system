@@ -34,27 +34,22 @@ class EmployeeCreate extends Base
 
 		$db = $this->getDb($input, $output);
 
-		$dbo = $this->container->get($db);
+		$pdo = $this->container->get($db);
 
-		$syncOutputStorage = new Storage($dbo, 'sync_output');
-		$syncDataManager = new SyncDataManager($syncOutputStorage);
+		$employeeManagerClass = '\App\\'.ucfirst($db).'\EmployeeManager';
+		/** @var EntityManager $entityManager */
+		$entityManager = new $employeeManagerClass($pdo);
+		$entityManager->setSyncDataManager(new SyncDataManager($pdo));
 
-		$employeeStorage = new Storage($dbo, 'employee');
-		$entityManager = new EntityManager($employeeStorage, $syncDataManager);
+		$name = $this->getEmployeeName($input, $output);
 
-		$name = $input->getArgument('name');
-		if (empty($name))
-		{
-			$question = new Question('Input employee name: ');
-			/** @var Helper $helper */
-			$helper = $this->getHelper('question');
-			$name = $helper->ask($input, $output, $question);
-		}
+		$entityManager->setFields([
+			'createdAt' => time(),
+			'modifiedAt' => time(),
+			'name' => $name,
+		]);
 
-		$employeeClass = '\App\\'.ucfirst($db).'\Employee\Employee';
-		$employee = new $employeeClass(time(), time(), $name);
-
-		if ($entityManager->add($employee))
+		if ($entityManager->add())
 		{
 			$output->writeln('<info>Done!</info>');
 		}
@@ -64,5 +59,18 @@ class EmployeeCreate extends Base
 		}
 
 		return 0;
+	}
+
+	private function getEmployeeName(InputInterface $input, OutputInterface $output)
+	{
+		$name = $input->getArgument('name');
+		if (empty($name))
+		{
+			$question = new Question('Input employee name: ');
+			/** @var Helper $helper */
+			$helper = $this->getHelper('question');
+			$name = $helper->ask($input, $output, $question);
+		}
+		return $name;
 	}
 }

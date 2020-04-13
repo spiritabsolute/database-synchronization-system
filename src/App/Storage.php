@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+//todo change to Doctrine ORM
 class Storage
 {
 	private $pdo;
@@ -47,18 +48,10 @@ class Storage
 		}
 	}
 
-	public function getAll(int $offset, int $limit): array
+	public function getAll(int $offset = 0, int $limit = 0): array
 	{
-		$statement = $this->pdo->prepare('
-			SELECT * 
-			FROM '.$this->pdo->quote($this->tableName).' 
-			ORDER_BY id DESC 
-			LIMIT :limit 
-			OFFSET :offset
-		');
-
-		$statement->bindValue(':limit', $limit, \PDO::PARAM_INT);
-		$statement->bindValue(':offset', $offset, \PDO::PARAM_INT);
+		$query = 'SELECT * FROM '.$this->pdo->quote($this->tableName).' ORDER BY id DESC';
+		$statement = $this->pdo->prepare($query);
 
 		$statement->execute();
 

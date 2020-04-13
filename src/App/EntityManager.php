@@ -1,41 +1,69 @@
 <?php
 namespace App;
 
-class EntityManager
+abstract class EntityManager
 {
-	private $storage;
-	private $syncDataManager;
+	protected $pdo;
 
-	public function __construct(Storage $storage, SyncDataManager $syncDataManager)
+	/**
+	 * @var SyncDataManager
+	 */
+	protected $syncDataManager;
+
+	protected $requiredFields = [];
+
+	protected $isFilled = false;
+
+	public function __construct(\PDO $pdo)
 	{
-		$this->storage = $storage;
+		$this->pdo = $pdo;
+	}
+
+	public function setSyncDataManager(SyncDataManager $syncDataManager): void
+	{
 		$this->syncDataManager = $syncDataManager;
 	}
 
-	public function add(Entity $entity): bool
+	public function add(): bool
 	{
-		$this->storage->beginTransaction();
-
-		$id = $this->storage->add($entity->getFields());
+		$id = $this->storage->add($this->getFields());
 
 		if ($id)
 		{
-			$hash = $this->syncDataManager->generateHash($entity->getHashInput());
+			$this->id = $id;
 
-			$queueId = $this->syncDataManager->addSyncQueue(
-				new SyncOutput($id, $entity->getType(), $hash)
-			);
-
-			if ($queueId)
+			if ($this->syncDataManager)
 			{
-				$this->storage->commitTransaction();
+				$hash = $this->syncDataManager->generateHash($this->getHashInput());
 
-				return true;
+				$queueId = $this->syncDataManager->addSyncOutput([
+					'id' => null,
+					'entity_id' => $id,
+					'entity_type' => static::class,
+					'hash' => $hash
+				]);
+
+				return ($queueId ? true : false);
 			}
-		}
 
-		$this->storage->rollbackTransaction();
+			return true;
+		}
 
 		return false;
 	}
+
+	public function setFields(array $fields): void
+	{
+		foreach ($this->requiredFields as $requiredField)
+		{
+			if (empty($fields[$requiredField]))
+			{
+				throw new \Exception('Required parameter "'.$requiredField.'" not filled');
+			}
+		}
+	}
+
+	abstract public function getFields($id = null): array;
+
+	abstract protected function getHashInput(): string;
 }

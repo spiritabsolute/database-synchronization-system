@@ -2,6 +2,7 @@
 
 use App\Console\Command\EmployeeCreate;
 use App\Console\Command\Migration;
+use App\Console\Command\SyncStart;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -13,6 +14,9 @@ return [
 			Migration::class => function (ContainerInterface $container) {
 				return new Migration($container);
 			},
+			SyncStart::class => function (ContainerInterface $container) {
+				return new SyncStart($container);
+			},
 		],
 	],
 	'console' => [
@@ -23,6 +27,7 @@ return [
 		'commands' => [
 			Migration::class,
 			EmployeeCreate::class,
+			SyncStart::class
 		],
 	],
 ];
