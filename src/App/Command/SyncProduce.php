@@ -1,7 +1,7 @@
 <?php
 namespace App\Command;
 
-use App\SyncDataManager;
+use App\SyncQueueManager;
 use App\SyncManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -35,7 +35,7 @@ class SyncProduce extends Command
 
 		$config = $this->container->get('config')['rabbit'];
 
-		$syncDataManager = new SyncDataManager($pdo);
+		$syncDataManager = new SyncQueueManager($pdo);
 		$syncSourceManager = new SyncManager($config, $syncDataManager);
 		$syncSourceManager->produce();
 

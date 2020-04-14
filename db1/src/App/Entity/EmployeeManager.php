@@ -8,7 +8,6 @@ class EmployeeManager extends EntityManager
 {
 	protected $storage;
 
-	protected $id;
 	private $createdAt;
 	private $modifiedAt;
 	private $name;
@@ -20,24 +19,6 @@ class EmployeeManager extends EntityManager
 		parent::__construct($pdo);
 
 		$this->storage = new Storage($pdo, 'employee');
-	}
-
-	public function add(): bool
-	{
-		$this->storage->beginTransaction();
-
-		if (parent::add())
-		{
-			$this->storage->commitTransaction();
-
-			return true;
-		}
-		else
-		{
-			$this->storage->rollbackTransaction();
-
-			return false;
-		}
 	}
 
 	public function setFields(array $fields): void
@@ -65,11 +46,11 @@ class EmployeeManager extends EntityManager
 		}
 		else
 		{
-			return $this->storage->get($id);
+			return $this->storage->getById($id);
 		}
 	}
 
-	protected function getHashInput(): string
+	public function getHashInput(): string
 	{
 		return $this->createdAt.$this->modifiedAt.$this->name;
 	}

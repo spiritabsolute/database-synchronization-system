@@ -13,7 +13,7 @@ return [
 		'password' => '',
 	],
 	'rabbit' => [
-		'host' => 'localhost',
+		'host' => 'rabbitmq',
 		'port' => 5672,
 		'user' => 'guest',
 		'password' => 'guest',

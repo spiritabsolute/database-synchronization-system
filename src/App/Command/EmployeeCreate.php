@@ -1,8 +1,8 @@
 <?php
 namespace App\Command;
 
-use App\EntityManager;
-use App\SyncDataManager;
+use App\Entity\EmployeeManager;
+use App\SyncQueueManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
@@ -38,8 +38,10 @@ class EmployeeCreate extends Command
 
 		$pdo = $this->container->get(\PDO::class);
 
-		$entityManager = new \App\Entity\EmployeeManager($pdo);
-		$entityManager->setSyncDataManager(new SyncDataManager($pdo));
+		$entityManager = new EmployeeManager($pdo);
+		$syncQueueManager = new SyncQueueManager($pdo);
+
+		$entityManager->attach($syncQueueManager);
 
 		$name = $this->getEmployeeName($input, $output);
 

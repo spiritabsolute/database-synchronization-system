@@ -28,7 +28,7 @@ class Storage
 		return $this->pdo->lastInsertId();
 	}
 
-	public function get(int $id): array
+	public function getById(int $id): array
 	{
 		$statement = $this->pdo->prepare('
 			SELECT * FROM '.$this->pdo->quote($this->tableName).' WHERE id = :id
@@ -48,26 +48,34 @@ class Storage
 		}
 	}
 
-	public function getAll(int $offset = 0, int $limit = 0): array
+	public function getList(array $filter): array
 	{
-		$query = 'SELECT * FROM '.$this->pdo->quote($this->tableName).' ORDER BY id DESC';
+		$whereValues = $this->prepareWhereValues($filter);
+
+		$query = '
+			SELECT * 
+			FROM '.$this->pdo->quote($this->tableName).' WHERE '.$whereValues.' ORDER BY id DESC';
 		$statement = $this->pdo->prepare($query);
+
+		$this->bindValues($statement, $filter);
 
 		$statement->execute();
 
 		return $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
-	public function update(int $id, array $fields): bool
+	public function update(array $filter, array $fields): bool
 	{
+		$whereValues = $this->prepareWhereValues($filter);
 		$values = $this->prepareUpdateValues($fields);
 
 		$statement = $this->pdo->prepare('
 			UPDATE '.$this->pdo->quote($this->tableName).' 
 			SET '.$values.'
-			WHERE id = :id
+			WHERE '.$whereValues.'
 		');
 
+		$this->bindValues($statement, $filter);
 		$this->bindValues($statement, $fields);
 
 		$statement->execute();
@@ -94,21 +102,6 @@ class Storage
 		return $this->pdo->query('SELECT COUNT(id) FROM '.$this->pdo->quote($this->tableName))->fetchColumn();
 	}
 
-	public function beginTransaction(): void
-	{
-		$this->pdo->beginTransaction();
-	}
-
-	public function commitTransaction(): void
-	{
-		$this->pdo->commit();
-	}
-
-	public function rollbackTransaction(): void
-	{
-		$this->pdo->rollback();
-	}
-
 	private function prepareValues(array $fields): string
 	{
 		$fieldIds = [];
@@ -127,6 +120,16 @@ class Storage
 			$fieldIds[] = $fieldId.' = :'.$fieldId;
 		}
 		return implode(',', $fieldIds);
+	}
+
+	private function prepareWhereValues(array $fields): string
+	{
+		$fieldIds = [];
+		foreach ($fields as $fieldId => $fieldValue)
+		{
+			$fieldIds[] = $fieldId.' = :'.$fieldId;
+		}
+		return implode(' AND ', $fieldIds);
 	}
 
 	private function bindValues($statement, array $fields): void

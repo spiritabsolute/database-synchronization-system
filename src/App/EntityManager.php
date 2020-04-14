@@ -1,27 +1,60 @@
 <?php
 namespace App;
 
-abstract class EntityManager
+abstract class EntityManager implements \SplSubject
 {
+	const EVENT_ADD = 0;
+	const EVENT_UPDATE = 1;
+	const EVENT_DELETE = 2;
+
 	protected $pdo;
 
-	/**
-	 * @var SyncDataManager
-	 */
-	protected $syncDataManager;
+	protected $observers;
+	protected $syncState = false;
+	protected $event = null;
 
+	protected $id = 0;
 	protected $requiredFields = [];
-
 	protected $isFilled = false;
 
 	public function __construct(\PDO $pdo)
 	{
 		$this->pdo = $pdo;
+
+		$this->observers = new \SplObjectStorage;
 	}
 
-	public function setSyncDataManager(SyncDataManager $syncDataManager): void
+	public function isSyncState(): bool
 	{
-		$this->syncDataManager = $syncDataManager;
+		return $this->syncState;
+	}
+
+	public function setSyncState(bool $syncState): void
+	{
+		$this->syncState = $syncState;
+	}
+
+	public function getEvent()
+	{
+		return $this->event;
+	}
+
+	public function attach (\SplObserver $observer): void
+	{
+		$this->observers->attach($observer);
+	}
+
+	public function detach (\SplObserver $observer): void
+	{
+		$this->observers->detach($observer);
+	}
+
+	public function notify (): void
+	{
+		foreach ($this->observers as $observer)
+		{
+			$observer->update($this);
+		}
 	}
 
 	public function add(): bool
@@ -32,19 +65,25 @@ abstract class EntityManager
 		{
 			$this->id = $id;
 
-			if ($this->syncDataManager)
-			{
-				$hash = $this->syncDataManager->generateHash($this->getHashInput());
+			$this->event = self::EVENT_ADD;
 
-				$outputId = $this->syncDataManager->addSyncOutput($id, static::class, $hash);
-
-				return ($outputId ? true : false);
-			}
+			$this->notify();
 
 			return true;
 		}
 
 		return false;
+	}
+
+	public function update(int $entityId): bool
+	{
+		$this->id = $entityId;
+		return $this->storage->update($this->getFields());
+	}
+
+	public function delete(int $entityId): bool
+	{
+		return $this->storage->delete($entityId);
 	}
 
 	public function setFields(array $fields): void
@@ -58,7 +97,12 @@ abstract class EntityManager
 		}
 	}
 
+	public function getId(): int
+	{
+		return $this->id;
+	}
+
 	abstract public function getFields($id = null): array;
 
-	abstract protected function getHashInput(): string;
+	abstract public function getHashInput(): string;
 }

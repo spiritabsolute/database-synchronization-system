@@ -11,9 +11,7 @@ class SyncManager
 
 	private $syncDataManager;
 
-	private $dbNamespace;
-
-	public function __construct($config, SyncDataManager $syncDataManager)
+	public function __construct($config, SyncQueueManager $syncDataManager)
 	{
 		$this->connection = new AMQPStreamConnection(
 			$config['host'],
@@ -32,10 +30,14 @@ class SyncManager
 
 		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, false, true);
 
-		$outputData = $this->syncDataManager->getOutputData();
+		$queue = $this->syncDataManager->getQueue();
 
-		$msg = new AMQPMessage($outputData, ['content_type' => 'application/json']);
-		$channel->basic_publish($msg, $exchange);
+		foreach ($queue as $row)
+		{
+			print_r($row);
+			$message = new AMQPMessage(json_encode($row), ['content_type' => 'application/json']);
+			$channel->basic_publish($message, $exchange);
+		}
 
 		$channel->close();
 		$this->connection->close();
@@ -63,21 +65,14 @@ class SyncManager
 
 	public function processMessage($message)
 	{
-		$inputData = json_decode($message->body, true);
+		$queueRow = json_decode($message->body, true);
 
-		while ($entityData = array_pop($inputData))
-		{
-			//todo sync log
-			echo $entityData['name'].PHP_EOL;
+		//todo sync log
+		echo '-'.$queueRow['name'].PHP_EOL;
 
-			if ($this->syncDataManager->addInputData($entityData))
-			{
-
-			}
-		}
+		$this->syncDataManager->consumeQueue($queueRow);
 
 		$message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
-
 		$message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
 	}
 
