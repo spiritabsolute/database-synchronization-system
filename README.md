@@ -1,9 +1,9 @@
+This is a console application. For installation, you will need a docker and docker-compose.
+
 ```
 git clone git@github.com:spiritabsolute/database-synchronization-system.git DatabaseSynchronizationSystem
 cd DatabaseSynchronizationSystem
 ```
-
-This is a console application. For installation, you will need a docker and docker-compose.
 
 Hit up the following command to start fetching all the dependencies:
 ```

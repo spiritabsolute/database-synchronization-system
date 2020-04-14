@@ -16,7 +16,7 @@ class PDOFactory
 		{
 			if ($this->pdo == null)
 			{
-				$config = $container->get('config')[$requestedName.'_config'];
+				$config = $container->get('config')['db'];
 				$this->pdo = new PDO(
 					$config['dsn'],
 					$config['username'],

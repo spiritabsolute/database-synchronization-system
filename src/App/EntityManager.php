@@ -36,15 +36,9 @@ abstract class EntityManager
 			{
 				$hash = $this->syncDataManager->generateHash($this->getHashInput());
 
-				//todo add output object
-				$queueId = $this->syncDataManager->addSyncOutput([
-					'id' => null,
-					'entity_id' => $id,
-					'entity_type' => static::class,
-					'hash' => $hash
-				]);
+				$outputId = $this->syncDataManager->addSyncOutput($id, static::class, $hash);
 
-				return ($queueId ? true : false);
+				return ($outputId ? true : false);
 			}
 
 			return true;

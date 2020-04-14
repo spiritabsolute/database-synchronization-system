@@ -1,5 +1,11 @@
 FROM php:7.2-cli
 
+ARG APP=""
+
+ENV APP $APP
+
 WORKDIR app
 
-CMD ["tail", "-f", "logs/application.log"]
+COPY entrypoint.sh /
+
+ENTRYPOINT ["/entrypoint.sh"]

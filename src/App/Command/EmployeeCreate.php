@@ -36,13 +36,9 @@ class EmployeeCreate extends Command
 	{
 		$output->writeln('<comment>Creating employee</comment>');
 
-		$db = $this->getDb($input, $output);
+		$pdo = $this->container->get(\PDO::class);
 
-		$pdo = $this->container->get($db);
-
-		$employeeManagerClass = '\App\\'.ucfirst($db).'\EmployeeManager';
-		/** @var EntityManager $entityManager */
-		$entityManager = new $employeeManagerClass($pdo);
+		$entityManager = new \App\Entity\EmployeeManager($pdo);
 		$entityManager->setSyncDataManager(new SyncDataManager($pdo));
 
 		$name = $this->getEmployeeName($input, $output);

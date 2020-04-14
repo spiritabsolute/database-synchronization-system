@@ -17,6 +17,8 @@ services:
   db1:
     build:
       context: ./docker
+      args:
+        - APP=db1
     container_name: 'db1'
     depends_on:
       - composer
@@ -27,6 +29,8 @@ services:
   db2:
     build:
       context: ./docker
+      args:
+        - APP=db2
     container_name: 'db2'
     depends_on:
       - composer

@@ -11,6 +11,8 @@ class SyncOutput extends AbstractMigration
 		$table->addColumn('entity_id', 'integer');
 		$table->addColumn('entity_type', 'integer');
 		$table->addColumn('hash', 'text');
+		$table->addColumn('status', 'integer');
+		$table->addColumn('action_type', 'integer');
 
 		$table->create();
 	}

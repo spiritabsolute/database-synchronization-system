@@ -3,6 +3,13 @@ namespace App;
 
 class SyncDataManager
 {
+	const WAITING_STATUS = 0;
+	const DONE_STATUS = 1;
+
+	const ADD_ACTION = 0;
+	const UPDATE_ACTION = 1;
+	const DELETE_ACTION = 2;
+
 	private $pdo;
 
 	public function __construct(\PDO $pdo)
@@ -10,16 +17,17 @@ class SyncDataManager
 		$this->pdo = $pdo;
 	}
 
-	public function addSyncOutput(array $fields): int
+	public function addSyncOutput(int $entityId, string $entityType, string $hash): int
 	{
 		$outputStorage = new Storage($this->pdo, 'sync_output');
-		return $outputStorage->add($fields);
-	}
-
-	public function updateStatusSyncInput(): bool
-	{
-		//todo
-		return true;
+		return $outputStorage->add([
+			'id' => null,
+			'entity_id' => $entityId,
+			'entity_type' => $entityType,
+			'hash' => $hash,
+			'status' => self::WAITING_STATUS,
+			'action_type' => self::ADD_ACTION
+		]);
 	}
 
 	public function getOutputData(): string
