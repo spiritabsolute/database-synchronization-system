@@ -7,37 +7,34 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EmployeeCreate extends Base
+class EmployeeDelete extends Base
 {
 	protected function configure()
 	{
 		parent::configure();
 
-		$this->setName('app:create-employee');
-		$this->setDescription('Creates a new employee');
+		$this->setName('app:delete-employee');
+		$this->setDescription('Delete a employee');
 
-		$this->addArgument('name', InputArgument::OPTIONAL, 'The name of employee');
+		$this->addArgument('id', InputArgument::OPTIONAL, 'The employee id');
 	}
 
 	public function execute(InputInterface $input, OutputInterface $output)
 	{
-		$output->writeln('<comment>Creating employee</comment>');
+		$output->writeln('<comment>Deleting employee</comment>');
 
 		$pdo = $this->container->get(\PDO::class);
 
+		$getListCommand = $this->container->get(EmployeeGetList::class);
+		$getListCommand->execute($input, $output);
+
 		$entityManager = new EmployeeManager($pdo);
 		$syncQueueManager = new SyncQueueManager($pdo);
-
 		$entityManager->attach($syncQueueManager);
 
-		$name = $this->getInput($input, $output, 'name', 'Input employee name: ');
+		$id = $this->getInput($input, $output, 'id', 'Input employee id: ');
 
-		$entityManager->setFields([
-			'modifiedAt' => time(),
-			'name' => $name,
-		]);
-
-		if ($entityManager->add())
+		if ($entityManager->delete($id))
 		{
 			$output->writeln('<info>Done!</info>');
 		}
@@ -46,7 +43,6 @@ class EmployeeCreate extends Base
 			$output->writeln('<error>Error!</error>');
 		}
 
-		$getListCommand = $this->container->get(EmployeeGetList::class);
 		$getListCommand->execute($input, $output);
 
 		return 0;

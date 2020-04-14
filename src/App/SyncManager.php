@@ -34,7 +34,6 @@ class SyncManager
 
 		foreach ($queue as $row)
 		{
-			print_r($row);
 			$message = new AMQPMessage(json_encode($row), ['content_type' => 'application/json']);
 			$channel->basic_publish($message, $exchange);
 		}

@@ -48,13 +48,15 @@ class Storage
 		}
 	}
 
-	public function getList(array $filter): array
+	public function getList(array $filter = []): array
 	{
 		$whereValues = $this->prepareWhereValues($filter);
 
 		$query = '
 			SELECT * 
-			FROM '.$this->pdo->quote($this->tableName).' WHERE '.$whereValues.' ORDER BY id DESC';
+			FROM '.$this->pdo->quote($this->tableName).' 
+			WHERE '.$whereValues.' ORDER BY id DESC
+		';
 		$statement = $this->pdo->prepare($query);
 
 		$this->bindValues($statement, $filter);
@@ -124,7 +126,7 @@ class Storage
 
 	private function prepareWhereValues(array $fields): string
 	{
-		$fieldIds = [];
+		$fieldIds = ['1 = 1'];
 		foreach ($fields as $fieldId => $fieldValue)
 		{
 			$fieldIds[] = $fieldId.' = :'.$fieldId;

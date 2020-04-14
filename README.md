@@ -29,3 +29,12 @@ First you need to perform migrations that create a database structure:
 ```
 bin/app.php app:migrate
 ```
+
+An example of creating an employee, viewing a list of the synchronization queue, 
+starting synchronization, deleting an employee:
+```
+bin/app.php app:create-employee
+bin/app.php app:get-list-sync
+bin/app.php app:produce-sync
+bin/app.php app:delete-employee
+```

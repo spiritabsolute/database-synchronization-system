@@ -14,6 +14,9 @@ abstract class EntityManager implements \SplSubject
 	protected $event = null;
 
 	protected $id = 0;
+	protected $createdAt;
+	protected $modifiedAt;
+
 	protected $requiredFields = [];
 	protected $isFilled = false;
 
@@ -59,6 +62,8 @@ abstract class EntityManager implements \SplSubject
 
 	public function add(): bool
 	{
+		$this->createdAt = time();
+
 		$id = $this->storage->add($this->getFields());
 
 		if ($id)
@@ -75,15 +80,42 @@ abstract class EntityManager implements \SplSubject
 		return false;
 	}
 
+	public function getList(array $filter = []): array
+	{
+		return $this->storage->getList($filter);
+	}
+
 	public function update(int $entityId): bool
 	{
 		$this->id = $entityId;
-		return $this->storage->update($this->getFields());
+		$this->modifiedAt = time();
+
+		if ($this->storage->update(['id' => $entityId], $this->getFields()))
+		{
+			$this->event = self::EVENT_UPDATE;
+
+			$this->notify();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function delete(int $entityId): bool
 	{
-		return $this->storage->delete($entityId);
+		$this->id = $entityId;
+
+		if ($this->storage->delete($entityId))
+		{
+			$this->event = self::EVENT_DELETE;
+
+			$this->notify();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function setFields(array $fields): void
@@ -104,5 +136,10 @@ abstract class EntityManager implements \SplSubject
 
 	abstract public function getFields($id = null): array;
 
-	abstract public function getHashInput(): string;
+	abstract public function getUpdatedFields(): array;
+
+	public function getHashInput(): string
+	{
+		return $this->id.$this->createdAt;
+	}
 }

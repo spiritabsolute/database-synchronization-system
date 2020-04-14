@@ -8,11 +8,9 @@ class EmployeeManager extends EntityManager
 {
 	protected $storage;
 
-	private $createdAt;
-	private $modifiedAt;
 	private $name;
 
-	protected $requiredFields = ['createdAt', 'modifiedAt', 'name'];
+	protected $requiredFields = ['name'];
 
 	public function __construct(\PDO $pdo)
 	{
@@ -26,8 +24,8 @@ class EmployeeManager extends EntityManager
 		parent::setFields($fields);
 
 		$this->id = $fields['id'] ?? null;
-		$this->createdAt = $fields['createdAt'];
-		$this->modifiedAt = $fields['modifiedAt'];
+		$this->createdAt = $fields['createdAt'] ?? $this->createdAt;
+		$this->modifiedAt = $fields['modifiedAt'] ?? $this->modifiedAt;
 		$this->name = $fields['name'];
 
 		$this->isFilled = true;
@@ -50,8 +48,10 @@ class EmployeeManager extends EntityManager
 		}
 	}
 
-	public function getHashInput(): string
+	public function getUpdatedFields(): array
 	{
-		return $this->createdAt.$this->modifiedAt.$this->name;
+		return [
+			'name' => 'name'
+		];
 	}
 }
