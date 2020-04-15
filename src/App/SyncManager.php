@@ -26,10 +26,12 @@ class SyncManager
 	public function produce()
 	{
 		$exchange = 'exchange';
+		$queue = 'base';
 
 		$channel = $this->connection->channel();
 
-		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, false, true);
+		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, true, true);
+		$channel->queue_bind($queue, $exchange);
 
 		$queue = $this->syncDataManager->getQueue();
 
@@ -48,11 +50,11 @@ class SyncManager
 	{
 		$exchange = 'exchange';
 		$queue = 'base';
-		$consumerTag = 'consumer';
+		$consumerTag = $this->config['consumer'];
 
 		$channel = $this->connection->channel();
 		$channel->queue_declare($queue, false, true, false, false);
-		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, false, true);
+		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, true, true);
 		$channel->queue_bind($queue, $exchange);
 		$channel->basic_consume($queue, $consumerTag, true, false, false, false, [$this, 'processMessage']);
 
