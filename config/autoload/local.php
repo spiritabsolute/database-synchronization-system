@@ -1,14 +1,8 @@
 <?php
 
 return [
-	"debug" => true,
-	"auth" => [
-		"users" => [
-			"admin" => "password"
-		]
-	],
 	'db' => [
-		'dsn' => 'sqlite:db/db.sqlite3',
+		'dsn' => 'sqlite:db/db.sq3',
 		'username' => '',
 		'password' => '',
 	],

@@ -4,7 +4,7 @@ namespace App\Entity;
 use App\EntityManager;
 use App\Storage;
 
-class OutletManager extends EntityManager
+class SkuManager extends EntityManager
 {
 	protected $storage;
 
@@ -12,7 +12,7 @@ class OutletManager extends EntityManager
 	{
 		parent::__construct($pdo);
 
-		$this->storage = new Storage($pdo, 'outlet');
+		$this->storage = new Storage($pdo, 'sku');
 	}
 
 	protected function getFieldsForAdd(array $fields = []): array
@@ -22,7 +22,7 @@ class OutletManager extends EntityManager
 			'createdAt' => time(),
 			'modifiedAt' => time(),
 			'name' => $fields['name'],
-			'owner_name' => $fields['owner_name'],
+			'stock' => $fields['stock'],
 		];
 	}
 
@@ -36,9 +36,9 @@ class OutletManager extends EntityManager
 		{
 			$fieldsForUpdate['name'] = $fields['name'];
 		}
-		if (!empty($fields['owner_name']))
+		if (!empty($fields['stock']))
 		{
-			$fieldsForUpdate['owner_name'] = $fields['owner_name'];
+			$fieldsForUpdate['stock'] = $fields['stock'];
 		}
 
 		return $fieldsForUpdate;
@@ -53,7 +53,7 @@ class OutletManager extends EntityManager
 	{
 		return [
 			'name' => 'name',
-			'owner_name' => 'owner_name'
+			'stock' => 'stock'
 		];
 	}
 }

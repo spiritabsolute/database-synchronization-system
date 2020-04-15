@@ -44,7 +44,9 @@ class OutletUpdate extends Base
 		$id = $this->getInput($input, $output, 'id', 'Input owner id: ');
 		$field = $this->getChoicedField($outletManager, $input, $output);
 		$value = $this->getInput($input, $output, 'value', 'Input value: ');
-		$fields[$field] = $value;
+		$fields = [
+			$field => $value
+		];
 
 		if ($outletManager->update($id, $fields))
 		{

@@ -9,6 +9,10 @@ use App\Command\OutletCreate;
 use App\Command\OutletDelete;
 use App\Command\OutletGetList;
 use App\Command\OutletUpdate;
+use App\Command\SkuCreate;
+use App\Command\SkuDelete;
+use App\Command\SkuGetList;
+use App\Command\SkuUpdate;
 use App\Command\SyncConsume;
 use App\Command\SyncGetList;
 use App\Command\SyncProduce;
@@ -53,6 +57,18 @@ return [
 			OutletDelete::class => function (ContainerInterface $container) {
 				return new OutletDelete($container);
 			},
+			SkuCreate::class => function (ContainerInterface $container) {
+				return new SkuCreate($container);
+			},
+			SkuGetList::class => function (ContainerInterface $container) {
+				return new SkuGetList($container);
+			},
+			SkuUpdate::class => function (ContainerInterface $container) {
+				return new SkuUpdate($container);
+			},
+			SkuDelete::class => function (ContainerInterface $container) {
+				return new SkuDelete($container);
+			},
 		],
 	],
 	'console' => [
@@ -69,6 +85,10 @@ return [
 			OutletGetList::class,
 			OutletUpdate::class,
 			OutletDelete::class,
+			SkuCreate::class,
+			SkuGetList::class,
+			SkuUpdate::class,
+			SkuDelete::class,
 		],
 	],
 ];

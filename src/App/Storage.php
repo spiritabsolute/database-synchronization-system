@@ -85,6 +85,22 @@ class Storage
 		return ($statement->rowCount() > 0);
 	}
 
+	public function deleteByFilter(array $filter): bool
+	{
+		$whereValues = $this->prepareWhereValues($filter);
+
+		$statement = $this->pdo->prepare('
+			DELETE FROM '.$this->pdo->quote($this->tableName).' 
+			WHERE '.$whereValues.'
+		');
+
+		$this->bindValues($statement, $filter);
+
+		$statement->execute();
+
+		return ($statement->rowCount() > 0);
+	}
+
 	public function delete(int $id): bool
 	{
 		$statement = $this->pdo->prepare('

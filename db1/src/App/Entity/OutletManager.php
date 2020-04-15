@@ -98,11 +98,11 @@ class OutletManager extends EntityManager
 			'modifiedAt' => time(),
 		];
 
-		if (empty($fields['name']))
+		if (!empty($fields['name']))
 		{
 			$fieldsForUpdate['name'] = $fields['name'];
 		}
-		if (empty($fields['owner_id']))
+		if (!empty($fields['owner_id']))
 		{
 			$fieldsForUpdate['owner_id'] = $fields['owner_id'];
 		}

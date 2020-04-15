@@ -71,7 +71,7 @@ abstract class EntityManager implements \SplSubject
 
 	public function getHashString(): string
 	{
-		return $this->id.static::class;
+		return $this->id.static::class.time();
 	}
 
 	public function isMultipleMode(): bool

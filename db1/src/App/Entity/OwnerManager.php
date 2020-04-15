@@ -16,7 +16,6 @@ class OwnerManager
 
 	public function add(array $fields): int
 	{
-		print_r($fields);
 		return $this->storage->add([
 			'id' => null,
 			'createdAt' => time(),

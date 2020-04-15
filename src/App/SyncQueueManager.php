@@ -22,11 +22,11 @@ class SyncQueueManager implements \SplObserver
 
 		$event = $entity->getEvent();
 		$entityId = $entity->getId();
+		$status = ($entity->isSyncState() ? self::DONE_STATUS : self::WAITING_STATUS);
 
 		switch ($event)
 		{
 			case $entity::EVENT_ADD:
-				$status = ($entity->isSyncState() ? self::DONE_STATUS : self::WAITING_STATUS);
 				$hash = ($entity->isSyncState() ? $entity->getSyncHash() : $this->generateHash($entity->getHashString()));
 				$syncQueue = new SyncQueue($entityId, get_class($entity), $hash, $status, $event);
 				$this->add($syncQueue);
@@ -37,7 +37,7 @@ class SyncQueueManager implements \SplObserver
 				if (empty($queue) || $queue['status'] == self::DONE_STATUS)
 				{
 					$this->updateEvent($entityId, $event);
-					$this->updateStatus($entityId, self::WAITING_STATUS);
+					$this->updateStatus($entityId, $status);
 				}
 				break;
 		}
@@ -136,7 +136,7 @@ class SyncQueueManager implements \SplObserver
 
 			$this->updateStatus($row['entity_id'], self::DONE_STATUS);
 		}
-		print_r($entitiesData);
+
 		return $entitiesData;
 	}
 
