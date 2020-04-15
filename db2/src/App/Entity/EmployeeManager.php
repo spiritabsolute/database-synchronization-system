@@ -8,10 +8,6 @@ class EmployeeManager extends EntityManager
 {
 	protected $storage;
 
-	private $name;
-
-	protected $requiredFields = ['name'];
-
 	public function __construct(\PDO $pdo)
 	{
 		parent::__construct($pdo);
@@ -19,33 +15,26 @@ class EmployeeManager extends EntityManager
 		$this->storage = new Storage($pdo, 'employee');
 	}
 
-	public function setFields(array $fields): void
+	protected function getFieldsForAdd(array $fields = []): array
 	{
-		parent::setFields($fields);
-
-		$this->id = $fields['id'] ?? null;
-		$this->createdAt = $fields['createdAt'] ?? $this->createdAt;
-		$this->modifiedAt = $fields['modifiedAt'] ?? $this->modifiedAt;
-		$this->name = $fields['name'];
-
-		$this->isFilled = true;
+		return [
+			'id' => null,
+			'createdAt' => time(),
+			'modifiedAt' => time(),
+			'name' => $fields['name'],
+		];
 	}
 
-	public function getFields($id = null): array
+	protected function getFieldsForUpdate(array $fields): array
 	{
-		if ($this->isFilled)
-		{
-			return [
-				'id' => $this->id,
-				'createdAt' => $this->createdAt,
-				'modifiedAt' => $this->modifiedAt,
-				'name' => $this->name
-			];
-		}
-		else
-		{
-			return $this->storage->getById($id);
-		}
+		return [
+			'name' => $fields['name']
+		];
+	}
+
+	public function getFieldsForSync(int $entityId): array
+	{
+		return $this->storage->getById($entityId);
 	}
 
 	public function getUpdatedFields(): array

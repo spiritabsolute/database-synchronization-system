@@ -13,7 +13,7 @@ class EmployeeCreate extends Base
 	{
 		parent::configure();
 
-		$this->setName('app:create-employee');
+		$this->setName('app:employee-create');
 		$this->setDescription('Creates a new employee');
 
 		$this->addArgument('name', InputArgument::OPTIONAL, 'The name of employee');
@@ -32,12 +32,11 @@ class EmployeeCreate extends Base
 
 		$name = $this->getInput($input, $output, 'name', 'Input employee name: ');
 
-		$entityManager->setFields([
-			'modifiedAt' => time(),
+		$fields = [
 			'name' => $name,
-		]);
+		];
 
-		if ($entityManager->add())
+		if ($entityManager->add($fields))
 		{
 			$output->writeln('<info>Done!</info>');
 		}

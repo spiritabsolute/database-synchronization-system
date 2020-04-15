@@ -16,6 +16,33 @@ class SyncQueueManager implements \SplObserver
 		$this->pdo = $pdo;
 	}
 
+	public function update(SplSubject $entity)
+	{
+		/** @var EntityManager $entity */
+
+		$event = $entity->getEvent();
+		$entityId = $entity->getId();
+
+		switch ($event)
+		{
+			case $entity::EVENT_ADD:
+				$status = ($entity->isSyncState() ? self::DONE_STATUS : self::WAITING_STATUS);
+				$hash = ($entity->isSyncState() ? $entity->getSyncHash() : $this->generateHash($entity->getHashString()));
+				$syncQueue = new SyncQueue($entityId, get_class($entity), $hash, $status, $event);
+				$this->add($syncQueue);
+				break;
+			case $entity::EVENT_UPDATE:
+			case $entity::EVENT_DELETE:
+				$queue = $this->getQueueByEntityId($entityId);
+				if (empty($queue) || $queue['status'] == self::DONE_STATUS)
+				{
+					$this->updateEvent($entityId, $event);
+					$this->updateStatus($entityId, self::WAITING_STATUS);
+				}
+				break;
+		}
+	}
+
 	public function updateStatus(int $entityId, int $status)
 	{
 		$storage = new Storage($this->pdo, 'sync_queue');
@@ -34,18 +61,20 @@ class SyncQueueManager implements \SplObserver
 		{
 			/** @var EntityManager $entity */
 			$entity = new $row['entity_type']($this->pdo);
+
 			$entity->setSyncState(true);
-			$entity->setFields($row);
+			$entity->setSyncHash($row['hash']);
+
 			$entity->attach($this);
 
 			switch ($row['event'])
 			{
 				case $entity::EVENT_ADD:
-					$entity->add();
+					$entity->add($row);
 					break;
 				case $entity::EVENT_UPDATE:
 					$entityId = $this->getEntityIdByHash($row['hash']);
-					$entity->update($entityId);
+					$entity->update($entityId, $row);
 					break;
 				case $entity::EVENT_DELETE:
 					$entityId = $this->getEntityIdByHash($row['hash']);
@@ -60,6 +89,7 @@ class SyncQueueManager implements \SplObserver
 	{
 		$storage = new Storage($this->pdo, 'sync_queue');
 		$queue = $storage->getList(['hash' => $hash]);
+		$queue = $queue ? current($queue) : 0;
 		return (int) $queue['entity_id'];
 	}
 
@@ -74,33 +104,6 @@ class SyncQueueManager implements \SplObserver
 		else
 		{
 			return [];
-		}
-	}
-
-	public function update(SplSubject $entity)
-	{
-		/** @var EntityManager $entity */
-
-		$event = $entity->getEvent();
-		$entityId = $entity->getId();
-
-		switch ($event)
-		{
-			case $entity::EVENT_ADD:
-				$status = ($entity->isSyncState() ? self::DONE_STATUS : self::WAITING_STATUS);
-				$hash = $this->generateHash($entity->getHashInput());
-				$syncQueue = new SyncQueue($entityId, get_class($entity), $hash, $status, $event);
-				$this->add($syncQueue);
-				break;
-			case $entity::EVENT_UPDATE:
-			case $entity::EVENT_DELETE:
-				$queue = $this->getQueueByEntityId($entityId);
-				if (empty($queue) || $queue['status'] == self::DONE_STATUS)
-				{
-					$this->updateEvent($entityId, $event);
-					$this->updateStatus($entityId, self::WAITING_STATUS);
-				}
-				break;
 		}
 	}
 
@@ -122,7 +125,7 @@ class SyncQueueManager implements \SplObserver
 			/** @var EntityManager $entityManager */
 			$entityManager = new $employeeManagerClass($this->pdo);
 
-			$fields = $entityManager->getFields($row['entity_id']);
+			$fields = $entityManager->getFieldsForSync($row['entity_id']);
 
 			unset($fields['id']);
 			$fields['hash'] = $row['hash'];
@@ -133,7 +136,7 @@ class SyncQueueManager implements \SplObserver
 
 			$this->updateStatus($row['entity_id'], self::DONE_STATUS);
 		}
-
+		print_r($entitiesData);
 		return $entitiesData;
 	}
 

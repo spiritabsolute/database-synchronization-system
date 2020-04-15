@@ -1,40 +1,43 @@
 <?php
-namespace App\Command;
+namespace App\CustomCommand;
 
-use App\Entity\EmployeeManager;
+use App\Entity\OutletManager;
+use App\Entity\OwnerManager;
 use App\SyncQueueManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EmployeeDelete extends Base
+class OwnerDelete extends \App\Command\Base
 {
 	protected function configure()
 	{
 		parent::configure();
 
-		$this->setName('app:employee-delete');
-		$this->setDescription('Delete an employee');
+		$this->setName('app:owner-delete');
+		$this->setDescription('Delete an owner');
 
 		$this->addArgument('id', InputArgument::OPTIONAL, 'The employee id');
 	}
 
 	public function execute(InputInterface $input, OutputInterface $output)
 	{
-		$output->writeln('<comment>Deleting employee</comment>');
+		$output->writeln('<comment>Deleting owner</comment>');
 
 		$pdo = $this->container->get(\PDO::class);
 
-		$getListCommand = $this->container->get(EmployeeGetList::class);
+		$getListCommand = $this->container->get(OwnerGetList::class);
 		$getListCommand->execute($input, $output);
 
-		$entityManager = new EmployeeManager($pdo);
+		$outletManager = new OutletManager($pdo);
 		$syncQueueManager = new SyncQueueManager($pdo);
-		$entityManager->attach($syncQueueManager);
+		$outletManager->attach($syncQueueManager);
 
-		$id = $this->getInput($input, $output, 'id', 'Input employee id: ');
+		$ownerManager = new OwnerManager($pdo, $outletManager);
 
-		if ($entityManager->delete($id))
+		$id = $this->getInput($input, $output, 'id', 'Input owner id: ');
+
+		if ($ownerManager->delete($id))
 		{
 			$output->writeln('<info>Done!</info>');
 		}

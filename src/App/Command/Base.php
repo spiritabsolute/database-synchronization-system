@@ -1,6 +1,7 @@
 <?php
 namespace App\Command;
 
+use App\EntityManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
@@ -47,5 +48,11 @@ class Base extends Command
 			$argument = $helper->ask($input, $output, $question);
 		}
 		return $argument;
+	}
+
+	protected function getChoicedField(EntityManager $entityManager, InputInterface $input, OutputInterface $output)
+	{
+		$updatedFields = $entityManager->getUpdatedFields();
+		return $this->getChoiceInput($input, $output, 'field', 'Select a field: ', $updatedFields);
 	}
 }

@@ -23,7 +23,7 @@ class EmployeeGetList extends Command
 	{
 		parent::configure();
 
-		$this->setName('app:get-list-employees');
+		$this->setName('app:employee-get-list');
 		$this->setDescription('Get list employees');
 	}
 

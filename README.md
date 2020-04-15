@@ -14,9 +14,11 @@ Once everything is finish downloading, you can execute PHP command line applicat
 In this state, you have a container with a rabbitmq and two containers with applications between 
 which synchronization will occur.
 
-Hit up the following command to start working with the application on which db1 is located.
+In two different command line session hit up the following commands to start working with the applications on 
+which db1 and db2 are located.
 ```
 docker-compose exec db1 bash
+docker-compose exec db2 bash
 ```
 This will open a new terminal inside the container. 
 
@@ -33,8 +35,8 @@ bin/app.php app:migrate
 An example of creating an employee, viewing a list of the synchronization queue, 
 starting synchronization, deleting an employee:
 ```
-bin/app.php app:create-employee
-bin/app.php app:get-list-sync
-bin/app.php app:produce-sync
-bin/app.php app:delete-employee
+bin/app.php app:employee-create
+bin/app.php app:sync-get-list
+bin/app.php app:sync-produce
+bin/app.php app:employee-delete
 ```

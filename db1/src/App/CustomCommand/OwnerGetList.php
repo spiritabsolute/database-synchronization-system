@@ -1,14 +1,14 @@
 <?php
-namespace App\Command;
+namespace App\CustomCommand;
 
-use App\SyncQueueManager;
-use App\SyncManager;
+use App\Entity\OwnerManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SyncConsume extends Command
+class OwnerGetList extends Command
 {
 	private $container;
 
@@ -23,23 +23,22 @@ class SyncConsume extends Command
 	{
 		parent::configure();
 
-		$this->setName('app:sync-consume');
-		$this->setDescription('Starts synchronization between databases');
+		$this->setName('app:owner-get-list');
+		$this->setDescription('Get list owners');
 	}
 
 	public function execute(InputInterface $input, OutputInterface $output)
 	{
-		$output->writeln('<comment>Start database synchronization</comment>');
+		$output->writeln('<comment>List owners</comment>');
 
 		$pdo = $this->container->get(\PDO::class);
 
-		$config = $this->container->get('config')['rabbit'];
+		$entityManager = new OwnerManager($pdo);
 
-		$syncDataManager = new SyncQueueManager($pdo);
-		$syncSourceManager = new SyncManager($config, $syncDataManager);
-		$syncSourceManager->consume();
+		$table = new Table($output);
+		$table->setRows($entityManager->getList());
 
-		$output->writeln('<info>Done!</info>');
+		$table->render();
 
 		return 0;
 	}

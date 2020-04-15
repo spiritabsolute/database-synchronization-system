@@ -5,6 +5,10 @@ use App\Command\EmployeeDelete;
 use App\Command\EmployeeGetList;
 use App\Command\EmployeeUpdate;
 use App\Command\Migration;
+use App\Command\OutletCreate;
+use App\Command\OutletDelete;
+use App\Command\OutletGetList;
+use App\Command\OutletUpdate;
 use App\Command\SyncConsume;
 use App\Command\SyncGetList;
 use App\Command\SyncProduce;
@@ -37,6 +41,18 @@ return [
 			EmployeeDelete::class => function (ContainerInterface $container) {
 				return new EmployeeDelete($container);
 			},
+			OutletCreate::class => function (ContainerInterface $container) {
+				return new OutletCreate($container);
+			},
+			OutletGetList::class => function (ContainerInterface $container) {
+				return new OutletGetList($container);
+			},
+			OutletUpdate::class => function (ContainerInterface $container) {
+				return new OutletUpdate($container);
+			},
+			OutletDelete::class => function (ContainerInterface $container) {
+				return new OutletDelete($container);
+			},
 		],
 	],
 	'console' => [
@@ -49,6 +65,10 @@ return [
 			EmployeeGetList::class,
 			EmployeeUpdate::class,
 			EmployeeDelete::class,
+			OutletCreate::class,
+			OutletGetList::class,
+			OutletUpdate::class,
+			OutletDelete::class,
 		],
 	],
 ];

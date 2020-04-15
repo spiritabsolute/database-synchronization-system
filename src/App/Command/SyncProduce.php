@@ -23,7 +23,7 @@ class SyncProduce extends Command
 	{
 		parent::configure();
 
-		$this->setName('app:produce-sync');
+		$this->setName('app:sync-produce');
 		$this->setDescription('Starts synchronization between databases');
 	}
 

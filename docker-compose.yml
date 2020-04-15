@@ -1,46 +1,32 @@
-version: '2'
+version: '2.2'
 
 networks:
   app:
     driver: bridge
 
 services:
-  composer:
-    restart: 'no'
-    build:
-      context: ./
-    container_name: 'composer'
-    volumes:
-      - .:/app
-    networks:
-      - app
   db1:
     build:
-      context: ./docker
+      context: ./
       args:
         - APP=db1
     container_name: 'db1'
-    depends_on:
-      - composer
-    volumes:
-      - .:/app
+    links:
+      - rabbitmq
     networks:
       - app
   db2:
     build:
-      context: ./docker
+      context: ./
       args:
         - APP=db2
     container_name: 'db2'
-    depends_on:
-      - composer
-    volumes:
-      - .:/app
+    links:
+      - rabbitmq
     networks:
       - app
   rabbitmq:
     image: 'rabbitmq:3-management'
-    hostname: 'rabbit'
     ports:
       - '15672:15672'
       - '5672:5672'

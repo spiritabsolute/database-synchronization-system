@@ -24,7 +24,7 @@ class SyncGetList extends Command
 	{
 		parent::configure();
 
-		$this->setName('app:get-list-sync');
+		$this->setName('app:sync-get-list');
 		$this->setDescription('Get list sync queue');
 	}
 

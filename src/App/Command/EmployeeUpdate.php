@@ -13,7 +13,7 @@ class EmployeeUpdate extends Base
 	{
 		parent::configure();
 
-		$this->setName('app:update-employee');
+		$this->setName('app:employee-update');
 		$this->setDescription('Update a employee');
 
 		$this->addArgument('id', InputArgument::OPTIONAL, 'The employee id');
@@ -35,17 +35,12 @@ class EmployeeUpdate extends Base
 		$entityManager->attach($syncQueueManager);
 
 		$id = $this->getInput($input, $output, 'id', 'Input employee id: ');
-		$fields = $entityManager->getFields($id);
 
-		$updatedFields = $entityManager->getUpdatedFields();
-		$field = $this->getChoiceInput($input, $output, 'field', 'Select a field: ', $updatedFields);
-
+		$field = $this->getChoicedField($entityManager, $input, $output);
 		$value = $this->getInput($input, $output, 'value', 'Input value: ');
-
 		$fields[$field] = $value;
 
-		$entityManager->setFields($fields);
-		if ($entityManager->update($id))
+		if ($entityManager->update($id, $fields))
 		{
 			$output->writeln('<info>Done!</info>');
 		}

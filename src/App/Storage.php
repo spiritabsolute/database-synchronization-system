@@ -38,9 +38,9 @@ class Storage
 
 		$statement->execute();
 
-		if ($employee = $statement->fetch(\PDO::FETCH_ASSOC))
+		if ($entity = $statement->fetch(\PDO::FETCH_ASSOC))
 		{
-			return $employee;
+			return $entity;
 		}
 		else
 		{
