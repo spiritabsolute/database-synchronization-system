@@ -25,20 +25,22 @@ class SyncManager
 
 	public function produce()
 	{
-		$exchange = 'exchange';
-		$queue = 'base';
+		$exchange = 'sync';
+		$queue = $this->config['queue'];
 
 		$channel = $this->connection->channel();
 
+		$channel->queue_declare($queue, false, true, false, false);
 		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, true, true);
 		$channel->queue_bind($queue, $exchange);
 
-		$queue = $this->syncDataManager->getQueue();
+		$syncQueue = $this->syncDataManager->getQueue();
 
-		foreach ($queue as $row)
+		foreach ($syncQueue as $queueRow)
 		{
-			echo $row['entity_type'].': '.$row['name'].'->'.PHP_EOL;
-			$message = new AMQPMessage(json_encode($row), ['content_type' => 'application/json']);
+			$queueRow['routing_key'] = $this->config['target_queue'];
+			echo $queueRow['entity_type'].': '.$queueRow['name'].'->'.PHP_EOL;
+			$message = new AMQPMessage(json_encode($queueRow), ['content_type' => 'application/json']);
 			$channel->basic_publish($message, $exchange);
 		}
 
@@ -48,12 +50,11 @@ class SyncManager
 
 	public function consume()
 	{
-		$exchange = 'exchange';
-		$queue = 'base';
+		$exchange = 'sync';
+		$queue = $this->config['target_queue'];
 		$consumerTag = $this->config['consumer'];
 
 		$channel = $this->connection->channel();
-		$channel->queue_declare($queue, false, true, false, false);
 		$channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, true, true);
 		$channel->queue_bind($queue, $exchange);
 		$channel->basic_consume($queue, $consumerTag, true, false, false, false, [$this, 'processMessage']);
@@ -70,13 +71,12 @@ class SyncManager
 	{
 		$queueRow = json_decode($message->body, true);
 
-		//todo sync log
-		echo $queueRow['entity_type'].': '.$queueRow['name'].'<-'.PHP_EOL;
-
-		$this->syncDataManager->consumeQueue($queueRow);
-
-		$message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
-		$message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
+		if ($queueRow['routing_key'] == $message->delivery_info['consumer_tag'])
+		{
+			echo $queueRow['entity_type'].': '.$queueRow['name'].'<-'.PHP_EOL;
+			$this->syncDataManager->consumeQueue($queueRow);
+			$message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+		}
 	}
 
 	public function shutdown($channel, $connection)

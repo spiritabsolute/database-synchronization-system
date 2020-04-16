@@ -1,10 +1,12 @@
 <?php
 
+use App\Command\AllGetList;
 use App\Command\EmployeeCreate;
 use App\Command\EmployeeDelete;
 use App\Command\EmployeeGetList;
 use App\Command\EmployeeUpdate;
 use App\Command\Migration;
+use App\Command\MigrationDemo;
 use App\Command\OutletCreate;
 use App\Command\OutletDelete;
 use App\Command\OutletGetList;
@@ -69,6 +71,12 @@ return [
 			SkuDelete::class => function (ContainerInterface $container) {
 				return new SkuDelete($container);
 			},
+			MigrationDemo::class => function (ContainerInterface $container) {
+				return new MigrationDemo($container);
+			},
+			AllGetList::class => function (ContainerInterface $container) {
+				return new AllGetList($container);
+			},
 		],
 	],
 	'console' => [
@@ -89,6 +97,8 @@ return [
 			SkuGetList::class,
 			SkuUpdate::class,
 			SkuDelete::class,
+			MigrationDemo::class,
+			AllGetList::class,
 		],
 	],
 ];

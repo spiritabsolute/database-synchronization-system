@@ -35,8 +35,30 @@ bin/app.php app:migrate
 An example of creating an employee, viewing a list of the synchronization queue, 
 starting synchronization, deleting an employee:
 ```
+bin/app.php app:migrate
 bin/app.php app:employee-create
 bin/app.php app:sync-get-list
 bin/app.php app:sync-produce
 bin/app.php app:employee-delete
+```
+
+Full example for test app:
+```
+docker-compose exec db1 bash
+bin/app.php app:migrate
+bin/app.php app:migrate-demo
+bin/app.php app:sync-produce
+==============================
+docker-compose exec db2 bash
+bin/app.php app:migrate
+bin/app.php app:migrate-demo
+bin/app.php app:sync-produce
+==============================
+docker-compose exec db1 bash
+bin/app.php app:sync-consume
+bin/app.php app:all-get-list
+==============================
+docker-compose exec db2 bash
+bin/app.php app:sync-consume
+bin/app.php app:all-get-list
 ```
